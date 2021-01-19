@@ -15,6 +15,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,7 +39,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
@@ -60,6 +61,8 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     def room_version = "2.2.6"
+    def version_retrofit = "2.9.0"
+    def version_moshi = "1.8.0"
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -75,4 +78,10 @@ dependencies {
 
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
+
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    implementation 'androidx.multidex:multidex:2.0.1'
 }

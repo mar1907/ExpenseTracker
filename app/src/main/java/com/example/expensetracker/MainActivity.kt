@@ -3,6 +3,8 @@ package com.example.expensetracker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var binding: ActivityMainBinding
 
+    private lateinit var summaryButton: Button
+
     private val auth by lazy {
         FirebaseAuth.getInstance()
     }
@@ -32,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        summaryButton = findViewById(R.id.summary_button)
+        summaryButton.setOnClickListener { goToSummary() }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client_id))
@@ -72,5 +79,10 @@ class MainActivity : AppCompatActivity() {
                 adapter.submitList(it)
             }
         })
+    }
+
+    fun goToSummary() {
+        val intent = Intent(this, Summary::class.java)
+        startActivity(intent)
     }
 }

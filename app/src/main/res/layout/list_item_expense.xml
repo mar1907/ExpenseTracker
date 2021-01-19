@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="expense"
+            type="com.example.expensetracker.database.Expense" />
+        <variable
+            name="clickListener"
+            type="com.example.expensetracker.expenselist.ExpenseListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> clickListener.onClick(expense)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/expense_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            tools:text="Amount"
+            app:expenseAmountFormatted="@{expense}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/expense_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:text="@{expense.comment}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/expense_date"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8"
+            tools:text="Comment" />
+
+        <TextView
+            android:id="@+id/expense_date"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:expenseDateFormatted="@{expense}"
+            app:layout_constraintStart_toEndOf="@+id/expense_amount"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Date" />
+
+        <TextView
+            android:id="@+id/expense_type"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@{expense.type}"
+            app:layout_constraintStart_toEndOf="@+id/expense_amount"
+            app:layout_constraintTop_toBottomOf="@+id/expense_date"
+            tools:text="Type" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

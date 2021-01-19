@@ -12,7 +12,7 @@ interface ExpenseDAO {
     suspend fun insert(expense: Expense)
 
     @Query("SELECT * from expense_main_table WHERE expenseId = :key")
-    suspend fun get(key: Long): Expense
+    fun get(key: Long): LiveData<Expense>
 
     @Query("SELECT * from expense_main_table ORDER BY time DESC")
     fun getAllExpenses(): LiveData<List<Expense>>

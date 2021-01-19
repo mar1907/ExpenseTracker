@@ -3,6 +3,7 @@ package com.example.expensetracker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.expensetracker.database.ExpenseDatabase
@@ -11,6 +12,7 @@ import com.example.expensetracker.expensedialog.ExpenseDialog
 import com.example.expensetracker.expenselist.ExpenseAdapter
 import com.example.expensetracker.expenselist.ExpenseListViewModel
 import com.example.expensetracker.expenselist.ExpenseListViewModelFactory
+import com.example.expensetracker.expenselist.ExpenseListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabAdd.setOnClickListener {
-            val dialog = ExpenseDialog()
+            val dialog = ExpenseDialog.newInstance(0)
 
             dialog.show(supportFragmentManager, "tag")
         }
@@ -60,12 +62,14 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(this, viewModelFactory)
                 .get(ExpenseListViewModel::class.java)
 
-        val adapter = ExpenseAdapter()
+        val adapter = ExpenseAdapter(ExpenseListener { expenseId ->
+            expenseListViewModel.onExpenseClicked(expenseId, supportFragmentManager)
+        })
         binding.expenseList.adapter = adapter
 
         expenseListViewModel.actualExpenses.observe(this, Observer {
             it?.let {
-                adapter.data = it
+                adapter.submitList(it)
             }
         })
     }

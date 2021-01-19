@@ -1,10 +1,12 @@
 package com.example.expensetracker.expenselist
 
 import android.app.Application
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Transformations
 import com.example.expensetracker.database.Expense
 import com.example.expensetracker.database.ExpenseDAO
+import com.example.expensetracker.expensedialog.ExpenseDialog
 
 class ExpenseListViewModel(
         val database: ExpenseDAO,
@@ -32,5 +34,11 @@ class ExpenseListViewModel(
 
         val finalList = expenseMap.toList().map { it.second}
         return finalList.sortedBy { it.time }
+    }
+
+    fun onExpenseClicked(id: Long, supportFragmentManager: FragmentManager) {
+        val dialog = ExpenseDialog.newInstance(id)
+
+        dialog.show(supportFragmentManager, "tag")
     }
 }

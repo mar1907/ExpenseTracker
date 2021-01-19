@@ -2,32 +2,60 @@ package com.example.expensetracker.expenselist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.expensetracker.R
-import com.example.expensetracker.TextItemViewHolder
 import com.example.expensetracker.database.Expense
+import com.example.expensetracker.databinding.ListItemExpenseBinding
 
-class ExpenseAdapter: RecyclerView.Adapter<TextItemViewHolder>() {
-    var data = listOf<Expense>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
+class ExpenseAdapter(val clickListener: ExpenseListener) : ListAdapter<Expense, ExpenseAdapter.ViewHolder>(ExpenseDiffCallback()) {
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position)!!, clickListener)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder.from(parent)
+    }
+
+    class ViewHolder private constructor(val binding: ListItemExpenseBinding) : RecyclerView.ViewHolder(binding.root){
+
+        fun bind(
+            item: Expense,
+            clickListener: ExpenseListener
+        ) {
+//            binding.expenseAmount.text = item.amount.toString()
+//            binding.expenseComment.text = item.comment
+//            binding.expenseDate.text = SimpleDateFormat("dd.MM.yyyy").format(Date(item.time))
+//            binding.expenseType.text = item.type
+            binding.expense = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
         }
 
-    override fun getItemCount() = data.size
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = ListItemExpenseBinding.inflate(layoutInflater, parent, false)
 
-    override fun onBindViewHolder(holder: TextItemViewHolder, position: Int) {
-        val item = data[position]
-        holder.textView.text = item.amount.toString()
+                return ViewHolder(binding)
+            }
+        }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TextItemViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater
-            .inflate(R.layout.expense_item_view, parent, false) as TextView
+}
 
-        return TextItemViewHolder(view)
+class ExpenseDiffCallback : DiffUtil.ItemCallback<Expense>() {
+    override fun areItemsTheSame(oldItem: Expense, newItem: Expense): Boolean {
+        return oldItem.expenseId == newItem.expenseId
     }
 
+    override fun areContentsTheSame(oldItem: Expense, newItem: Expense): Boolean {
+        return oldItem == newItem
+    }
+
+}
+
+class ExpenseListener(val clickListener: (expenseId: Long) -> Unit) {
+    fun onClick(expense: Expense) = clickListener(expense.expenseId)
 }

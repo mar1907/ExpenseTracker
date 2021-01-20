@@ -1,6 +1,5 @@
 package com.example.expensetracker
 
-import android.content.res.Resources
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseMethod
@@ -16,7 +15,9 @@ fun TextView.setExpenseDate(item: Expense) {
 
 @BindingAdapter("expenseAmountFormatted")
 fun TextView.setExpenseAmount(item: Expense) {
-    text = item.amount.toString()
+    val context = ExpenseTrackerApplication.instance
+    val format = context.resources.getString(R.string.amount, String.format("%.2f", item.amount))
+    text =  format
 }
 
 @InverseMethod("textToAmount")
@@ -24,7 +25,7 @@ fun amountToText(amount: Double): String {
     return if (amount == 0.0)
         ""
     else
-        amount.toString()
+        String.format("%.2f",amount)
 }
 
 fun textToAmount(amount: String): Double {

@@ -5,7 +5,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.expensetracker.database.ExpenseDatabase
 import com.example.expensetracker.databinding.ActivitySummaryBinding
+import com.example.expensetracker.summary.SummaryViewModel
+import com.example.expensetracker.summary.SummaryViewModelFactory
 
 class SummaryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: ActivitySummaryBinding
@@ -27,6 +32,19 @@ class SummaryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.summarySpinner.adapter = adapter
         }
+
+        val application = requireNotNull(this).application
+        val dataSource = ExpenseDatabase.getInstance(application).expenseDAO
+        val viewModelFactory = SummaryViewModelFactory(dataSource, application)
+        val summaryViewModel =
+            ViewModelProvider(this, viewModelFactory)
+                .get(SummaryViewModel::class.java)
+
+        summaryViewModel.summary.observe(this, Observer {
+            it?.let {
+                binding.summary = it
+            }
+        })
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -38,20 +56,16 @@ class SummaryActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 else  ->  ""
             }
 
-        fillSummaries(currency)
+        binding.rate = when (currency) {
+            "EUR" -> SavedPreference.getExchangeRateEUR(this)!!.toDouble()
+            "USD" -> SavedPreference.getExchangeRateUSD(this)!!.toDouble()
+            else  -> 1.0
+        }
+
+        binding.currency = currency
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // nothing to do
-    }
-
-    private fun fillSummaries(currency: String) {
-        binding.summaryFood.text = "Food: 0 $currency"
-        binding.summaryClothes.text = "Clothes: 0 $currency"
-        binding.summaryEntertainment.text = "Entertainment: 0 $currency"
-        binding.summaryTransport.text = "Transport: 0 $currency"
-        binding.summaryBills.text = "Bills: 0 $currency"
-        binding.summaryOther.text = "Other: 0 $currency"
-
     }
 }

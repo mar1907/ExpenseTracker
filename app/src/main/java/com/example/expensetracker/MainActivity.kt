@@ -3,6 +3,9 @@ package com.example.expensetracker
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.expensetracker.database.ExpenseDatabase
@@ -39,8 +42,6 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        binding.summaryButton.setOnClickListener { goToSummary() }
-
         val sdf = SimpleDateFormat("yyyy-MM-dd")
 
         // if today is after last day we run the observer
@@ -60,14 +61,6 @@ class MainActivity : AppCompatActivity() {
             .build()
         // getting the value of gso inside the GoogleSigninClient
         mGoogleSignInClient= GoogleSignIn.getClient(this, gso)
-
-        binding.logout.setOnClickListener {
-            mGoogleSignInClient.signOut().addOnCompleteListener{
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
 
         binding.fabAdd.setOnClickListener {
             val dialog = ExpenseDialog.newInstance(0)
@@ -95,8 +88,29 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun goToLogout() {
+        mGoogleSignInClient.signOut().addOnCompleteListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
     private fun goToSummary() {
         val intent = Intent(this, SummaryActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_summary -> goToSummary()
+            R.id.action_logout -> goToLogout()
+        }
+        return true
     }
 }

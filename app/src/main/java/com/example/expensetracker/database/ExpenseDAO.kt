@@ -17,5 +17,4 @@ interface ExpenseDAO {
     @Query("SELECT * from expense_main_table ORDER BY time DESC")
     fun getAllExpenses(): LiveData<List<Expense>>
 
-    //others
 }

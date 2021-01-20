@@ -1,102 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <Spinner
-        android:id="@+id/summary_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"/>
+    <data>
+        <variable
+            name="summary"
+            type="com.example.expensetracker.summary.SummaryData" />
+        <variable
+            name="rate"
+            type="Double" />
+        <variable
+            name="currency"
+            type="String" />
+        <import type="com.example.expensetracker.BindingUtilsKt" />
+    </data>
 
-    <TextView
-        android:id="@+id/summary_exchange_rate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="15dp"
-        android:textColor="@color/black"
-        android:text="Exchange Rate"/>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
 
-        <LinearLayout
-            android:id="@+id/scroll_linear_layout"
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/summary_spinner"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_gravity="center_horizontal"/>
 
-            <TextView
-                android:id="@+id/summary_food"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
+        <TextView
+            android:id="@+id/summary_exchange_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:text="@string/exchange_rate" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/scroll_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:text="Food"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/summary_clothes"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:background="@android:color/darker_gray"
-                android:text="Clothes"/>
+                <TextView
+                    android:id="@+id/summary_food"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@{@string/summary_food(String.format(`%.2f`, summary.food * rate), currency)}" />
 
-            <TextView
-                android:id="@+id/summary_entertainment"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:text="Entertainment"/>
+                <TextView
+                    android:id="@+id/summary_clothes"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:background="@android:color/darker_gray"
+                    android:text="@{@string/summary_clothes(String.format(`%.2f`, summary.clothes * rate), currency)}" />
 
-            <TextView
-                android:id="@+id/summary_transport"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:background="@android:color/darker_gray"
-                android:text="Transport"/>
+                <TextView
+                    android:id="@+id/summary_entertainment"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@{@string/summary_entertainment(String.format(`%.2f`, summary.entertainment * rate), currency)}" />
 
-            <TextView
-                android:id="@+id/summary_bills"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:text="Bills"/>
+                <TextView
+                    android:id="@+id/summary_transport"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:background="@android:color/darker_gray"
+                    android:text="@{@string/summary_transport(String.format(`%.2f`, summary.transport * rate), currency)}" />
 
-            <TextView
-                android:id="@+id/summary_other"
-                android:paddingTop="20sp"
-                android:paddingBottom="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/black"
-                android:background="@android:color/darker_gray"
-                android:text="Other"/>
+                <TextView
+                    android:id="@+id/summary_bills"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@{@string/summary_bills(String.format(`%.2f`, summary.bills * rate), currency)}" />
 
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/summary_other"
+                    android:paddingTop="20sp"
+                    android:paddingBottom="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:background="@android:color/darker_gray"
+                    android:text="@{@string/summary_other(String.format(`%.2f`, summary.other * rate), currency)}" />
 
-</LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+</layout>

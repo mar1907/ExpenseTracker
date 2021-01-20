@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
+import com.example.expensetracker.ExpenseTrackerApplication
+import com.example.expensetracker.SavedPreference
 import com.example.expensetracker.database.Expense
 import com.example.expensetracker.database.ExpenseDAO
 import kotlinx.coroutines.launch
@@ -21,21 +23,27 @@ class ExpenseDialogViewModel(
 
     fun getExpense() = expense
 
-    lateinit var actualExpense: Expense
-
-    // val addButtonVisible = Transformations.map(currentExpense) TODO???
-
     fun onNewExpense(currency: String) {
         // convert value using currency
+        var rate = 1.0
+        if (currency != "RON") {
+            val context = getApplication<Application>()
+            rate = when(currency) {
+                "USD" -> SavedPreference.getExchangeRateUSD(context)!!.toDouble()
+                "EUR" -> SavedPreference.getExchangeRateEUR(context)!!.toDouble()
+                else -> 1.0
+            }
+        }
         viewModelScope.launch {
-            insert()
+            insert(rate)
         }
     }
 
     // Insert new expense item. This may be an update - if the expenseID is not 0. If so, insert
     // a delete object and the new object.
-    private suspend fun insert() {
+    private suspend fun insert(rate: Double) {
         val newExpense = expense.value!!
+        newExpense.amount *= (1.0 / rate)
 
         if (newExpense.expenseId != 0L) {
             val delExpense = Expense(deleteId = newExpense.expenseId)

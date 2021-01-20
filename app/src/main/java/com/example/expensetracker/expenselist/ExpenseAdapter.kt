@@ -24,10 +24,6 @@ class ExpenseAdapter(val clickListener: ExpenseListener) : ListAdapter<Expense, 
             item: Expense,
             clickListener: ExpenseListener
         ) {
-//            binding.expenseAmount.text = item.amount.toString()
-//            binding.expenseComment.text = item.comment
-//            binding.expenseDate.text = SimpleDateFormat("dd.MM.yyyy").format(Date(item.time))
-//            binding.expenseType.text = item.type
             binding.expense = item
             binding.clickListener = clickListener
             binding.executePendingBindings()

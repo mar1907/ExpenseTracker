@@ -24,7 +24,7 @@
         android:textSize="20sp"
         android:padding="10dp"
         android:foreground="?android:attr/selectableItemBackground"
-        android:textColor="@android:color/holo_orange_light"
+        android:textColor="@android:color/white"
         android:background="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -50,7 +50,9 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="#6200EE"
+        app:tint="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expense_list"

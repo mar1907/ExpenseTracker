@@ -75,7 +75,10 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if (task.isSuccessful) {
                 SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
+                SavedPreference.setUsername(this, account.displayName.toString())
+                SavedPreference.setExchangeRateDate(this, "2021-01-19")
+                SavedPreference.setExchangeRateEUR(this, "0.2051534548")
+                SavedPreference.setExchangeRateUSD(this, "0.2488921713")
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()

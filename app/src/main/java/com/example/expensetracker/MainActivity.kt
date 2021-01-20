@@ -12,18 +12,21 @@ import com.example.expensetracker.expenselist.ExpenseAdapter
 import com.example.expensetracker.expenselist.ExpenseListViewModel
 import com.example.expensetracker.expenselist.ExpenseListViewModelFactory
 import com.example.expensetracker.expenselist.ExpenseListener
+import com.example.expensetracker.network.ExchangeRateViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var binding: ActivityMainBinding
 
-    private val exchangeRateViewModel: MainActivityViewModel by lazy {
-        ViewModelProvider(this).get(MainActivityViewModel::class.java)
+    private val exchangeRateViewModel: ExchangeRateViewModel by lazy {
+        ViewModelProvider(this).get(ExchangeRateViewModel::class.java)
     }
 
     private val auth by lazy {
@@ -38,11 +41,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.summaryButton.setOnClickListener { goToSummary() }
 
-        exchangeRateViewModel.response.observe(this, Observer {
-            it?.let {
-                binding.aleluia.text = it.toString()
-            }
-        })
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+
+        // if today is after last day we run the observer
+        if (sdf.parse(sdf.format(Date())).after(sdf.parse(SavedPreference.getExchangeRateDate(this)))) {
+            exchangeRateViewModel.response.observe(this, Observer {
+                it?.let {
+                    binding.aleluia.text = it.toString()
+                    SavedPreference.setExchangeRateDate(this, it.date)
+                    SavedPreference.setExchangeRateEUR(this, it.rates.EUR.toString())
+                    SavedPreference.setExchangeRateUSD(this, it.rates.USD.toString())
+                }
+            })
+        }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client_id))
@@ -86,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToSummary() {
-        val intent = Intent(this, Summary::class.java)
+        val intent = Intent(this, SummaryActivity::class.java)
         startActivity(intent)
     }
 }

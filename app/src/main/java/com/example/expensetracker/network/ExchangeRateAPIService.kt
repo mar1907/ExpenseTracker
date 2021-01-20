@@ -21,8 +21,7 @@ private val retrofit = Retrofit.Builder()
 
 interface ExchangeRateAPIService {
     @GET("latest?symbols=USD,EUR&base=RON")
-    fun getProperties():
-            Call<ExchangeRateJSON>
+    suspend fun getProperties(): ExchangeRateJSON
 }
 
 object ExchangeRateAPI {

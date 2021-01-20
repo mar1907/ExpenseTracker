@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -29,9 +30,6 @@ class ExpenseDialog private constructor(): DialogFragment() {
         }
 
         binding.addButton.setOnClickListener {
-            // It looks like we can't directly call ViewModel functions, from XML, WITH parameters
-            // taken from UI elements, this is the second best thing - it could be done (maybe) with
-            // two-way data binding but seems a bit error prone - maybe refactor later.
             databaseAppend()
         }
 
@@ -54,16 +52,30 @@ class ExpenseDialog private constructor(): DialogFragment() {
             }
         })
 
+        binding.addButton.text = if (expenseId == 0L)
+            "Add"
+        else
+            "Update"
+
+        if (expenseId != 0L) {
+            binding.deleteButton.visibility = View.VISIBLE
+            binding.deleteButton.setOnClickListener {
+                databaseDelete()
+            }
+        }
+
         return binding.root
     }
 
+    // not added to the layout XML file because we need to also dismiss the dialog
     private fun databaseAppend() {
-        binding.expenseDialogViewModel?.onNewExpense(
-            binding.amountEditText.text.toString().toDouble(),
-            binding.commentEditText.text.toString(),
-            binding.typeSpinner.text.toString()
-        )
+        binding.expenseDialogViewModel?.onNewExpense(binding.currencySpinner.selectedItem.toString())
+        dismiss()
+    }
 
+    // not added to the layout XML file because we need to also dismiss the dialog
+    private fun databaseDelete() {
+        binding.expenseDialogViewModel?.onDeleteExpense()
         dismiss()
     }
 

@@ -23,7 +23,8 @@ class ExpenseListViewModel(
     // operations of elements (through a map). Return a list sorted by time.
     private fun formatExpenses(expenseList: List<Expense>) : List<Expense> {
         val expenseMap: MutableMap<Long, Expense> = mutableMapOf()
-        for (e in expenseList) {
+        val sortedList = expenseList.sortedBy { it.expenseId }
+        for (e in sortedList) {
             if (e.deleteId == 0L) {
                 expenseMap[e.expenseId] = e
             }

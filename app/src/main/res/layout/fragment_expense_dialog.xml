@@ -11,6 +11,7 @@
         <variable
             name="expense"
             type="com.example.expensetracker.database.Expense" />
+        <import type="com.example.expensetracker.BindingUtilsKt" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,43 +30,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:ems="10"
             android:hint="Amount"
             android:inputType="numberDecimal"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@={BindingUtilsKt.amountToText(expense.amount)}"
+            app:layout_constraintEnd_toStartOf="@+id/currency_spinner"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/comment_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="Comment"
-            android:text="@{expense.comment}"
+            android:inputType="textPersonName"
+            android:text="@={expense.comment}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amount_edit_text" />
 
-        <EditText
-            android:id="@+id/type_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Spinner for options"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/comment_edit_text" />
-<!--        TODO-->
+        <!--        TODO-->
 
         <Button
             android:id="@+id/add_button"
@@ -74,7 +63,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/type_spinner" />
@@ -90,7 +78,43 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/type_spinner" />
-        <!--        delete-->
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Delete"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_button"
+            tools:visibility="visible" />
+
+        <Spinner
+            android:id="@+id/type_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:entries="@array/types"
+            android:selectedItemPosition="@={BindingUtilsKt.typeToIndex(expense.type)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/comment_edit_text" />
+
+        <Spinner
+            android:id="@+id/currency_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:entries="@array/currencies"
+            app:layout_constraintBaseline_toBaselineOf="@+id/amount_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/amount_edit_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

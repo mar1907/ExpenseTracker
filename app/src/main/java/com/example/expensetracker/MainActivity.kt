@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.logout.setOnClickListener {
             mGoogleSignInClient.signOut().addOnCompleteListener{
-                val intent = Intent(this, LoginScreen::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }

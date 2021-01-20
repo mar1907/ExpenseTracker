@@ -6,14 +6,97 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_gravity="center_vertical"
     tools:context=".MainActivity" >
 
+    <Spinner
+        android:id="@+id/summary_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
     <TextView
-        android:id="@+id/summary_text"
+        android:id="@+id/summary_exchange_rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Summary"/>
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:text="Exchange Rate"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/scroll_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/summary_food"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="Food"/>
+
+            <TextView
+                android:id="@+id/summary_clothes"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:background="@android:color/darker_gray"
+                android:text="Clothes"/>
+
+            <TextView
+                android:id="@+id/summary_entertainment"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="Entertainment"/>
+
+            <TextView
+                android:id="@+id/summary_transport"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:background="@android:color/darker_gray"
+                android:text="Transport"/>
+
+            <TextView
+                android:id="@+id/summary_bills"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:text="Bills"/>
+
+            <TextView
+                android:id="@+id/summary_other"
+                android:paddingTop="20sp"
+                android:paddingBottom="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:background="@android:color/darker_gray"
+                android:text="Other"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

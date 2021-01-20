@@ -11,9 +11,9 @@ import com.example.expensetracker.network.ExchangeRateJSON
 object SavedPreference {
     const val EMAIL = "email"
     const val USERNAME = "username"
-    const val EXCHANGE_RATE_DATE = "1996-07-19"
-    const val EXCHANGE_RATE_EUR = "1"
-    const val EXCHANGE_RATE_USD = "1"
+    const val EXCHANGE_RATE_DATE = "exchange_rate_date"
+    const val EXCHANGE_RATE_EUR = "exchange_rate_eur"
+    const val EXCHANGE_RATE_USD = "exchange_rate_usd"
 
     private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)

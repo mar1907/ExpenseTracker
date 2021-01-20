@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         if (sdf.parse(sdf.format(Date())).after(sdf.parse(SavedPreference.getExchangeRateDate(this)))) {
             exchangeRateViewModel.response.observe(this, Observer {
                 it?.let {
-                    binding.aleluia.text = it.toString()
                     SavedPreference.setExchangeRateDate(this, it.date)
                     SavedPreference.setExchangeRateEUR(this, it.rates.EUR.toString())
                     SavedPreference.setExchangeRateUSD(this, it.rates.USD.toString())

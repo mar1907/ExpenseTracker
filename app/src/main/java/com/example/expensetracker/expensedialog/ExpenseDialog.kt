@@ -64,19 +64,25 @@ class ExpenseDialog private constructor(): DialogFragment() {
             }
         }
 
+        expenseDialogViewModel.dismiss.observe(this, Observer {
+            it?.let {
+                if (it) dismiss()
+            }
+        })
+
         return binding.root
     }
 
     // not added to the layout XML file because we need to also dismiss the dialog
     private fun databaseAppend() {
         binding.expenseDialogViewModel?.onNewExpense(binding.currencySpinner.selectedItem.toString())
-        dismiss()
+//        dismiss()
     }
 
     // not added to the layout XML file because we need to also dismiss the dialog
     private fun databaseDelete() {
         binding.expenseDialogViewModel?.onDeleteExpense()
-        dismiss()
+//        dismiss()
     }
 
     companion object {

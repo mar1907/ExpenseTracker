@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.expensetracker.database.ExpenseDatabase
@@ -15,6 +14,7 @@ import com.example.expensetracker.expenselist.ExpenseAdapter
 import com.example.expensetracker.expenselist.ExpenseListViewModel
 import com.example.expensetracker.expenselist.ExpenseListViewModelFactory
 import com.example.expensetracker.expenselist.ExpenseListener
+import com.example.expensetracker.firebase.FirebaseDatabaseRepo
 import com.example.expensetracker.network.ExchangeRateViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -37,10 +37,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        FirebaseDatabaseRepo.initialize()
 
         val sdf = SimpleDateFormat("yyyy-MM-dd")
 

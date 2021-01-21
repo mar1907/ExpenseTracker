@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // UpdateUI() function - this is where we specify what UI updation are needed after google signin has taken place.
+    // UpdateUI() function - this is where we specify what UI updates are needed after google signin has taken place.
     private fun UpdateUI(account: GoogleSignInAccount){
         val credential = GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->

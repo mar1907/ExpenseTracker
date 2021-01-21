@@ -4,16 +4,20 @@ import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
-import com.example.expensetracker.ExpenseTrackerApplication
 import com.example.expensetracker.SavedPreference
 import com.example.expensetracker.database.Expense
 import com.example.expensetracker.database.ExpenseDAO
+import com.example.expensetracker.firebase.FirebaseDatabaseRepo
 import kotlinx.coroutines.launch
 
 class ExpenseDialogViewModel(
         private val expenseKey: Long,
         val database: ExpenseDAO,
         application: Application) : AndroidViewModel(application) {
+
+    private val firebaseDatabase = FirebaseDatabaseRepo.instance
+
+    val dismiss = MutableLiveData<Boolean>(false)
 
     // add "current" entry - for update
     private val expense: LiveData<Expense> = if (expenseKey == 0L)
@@ -34,23 +38,32 @@ class ExpenseDialogViewModel(
                 else -> 1.0
             }
         }
+
+        val newExpense = expense.value!!
+        newExpense.amount *= (1.0 / rate)
+
         viewModelScope.launch {
-            insert(rate)
+            insert(newExpense)
         }
     }
 
     // Insert new expense item. This may be an update - if the expenseID is not 0. If so, insert
     // a delete object and the new object.
-    private suspend fun insert(rate: Double) {
-        val newExpense = expense.value!!
-        newExpense.amount *= (1.0 / rate)
+    private suspend fun insert(newExpense: Expense) {
 
         if (newExpense.expenseId != 0L) {
             val delExpense = Expense(deleteId = newExpense.expenseId)
-            database.insert(delExpense)
+            val newId = database.insert(delExpense)
+            delExpense.expenseId = newId
+            firebaseDatabase.insert(delExpense)
             newExpense.expenseId = 0L
+            Log.i("insert", "delete")
         }
-        database.insert(newExpense)
+        val newId = database.insert(newExpense)
+        Log.i("insert", "insert")
+        newExpense.expenseId = newId
+        firebaseDatabase.insert(newExpense)
+        dismiss.value = true
     }
 
     fun onDeleteExpense() {
@@ -61,7 +74,10 @@ class ExpenseDialogViewModel(
 
     // Delete an expense item. What actually happens is that a delete object is inserted.
     private suspend fun delete() {
-        val delExpense = Expense(deleteId = expense.value!!.expenseId)
-        database.insert(delExpense)
+        val delExpense = Expense(deleteId = expense.value!!.time)
+        val newId = database.insert(delExpense)
+        delExpense.expenseId = newId
+        firebaseDatabase.insert(delExpense)
+        dismiss.value = true
     }
 }

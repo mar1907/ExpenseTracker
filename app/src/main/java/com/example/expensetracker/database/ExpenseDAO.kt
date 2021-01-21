@@ -9,12 +9,15 @@ import androidx.room.Query
 interface ExpenseDAO {
 
     @Insert
-    suspend fun insert(expense: Expense)
+    suspend fun insert(expense: Expense): Long
 
     @Query("SELECT * from expense_main_table WHERE expenseId = :key")
     fun get(key: Long): LiveData<Expense>
 
     @Query("SELECT * from expense_main_table ORDER BY time DESC")
     fun getAllExpenses(): LiveData<List<Expense>>
+
+    @Query("SELECT * from expense_main_table ORDER BY time DESC")
+    suspend fun getExpenses(): List<Expense>
 
 }

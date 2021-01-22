@@ -20,4 +20,7 @@ interface ExpenseDAO {
     @Query("SELECT * from expense_main_table ORDER BY time DESC")
     suspend fun getExpenses(): List<Expense>
 
+    @Query("DELETE from expense_main_table")
+    suspend fun deleteAll()
+
 }

@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun goToLogout() {
         mGoogleSignInClient.signOut().addOnCompleteListener {
+            FirebaseDatabaseRepo.instance.flushDatabase()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()

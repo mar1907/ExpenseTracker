@@ -48,9 +48,7 @@ class FirebaseDatabaseRepo {
                 updateDatabase(expenseList)
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+            override fun onCancelled(error: DatabaseError) {}
         }
         database.addValueEventListener(expenseListListener)
     }
@@ -61,19 +59,27 @@ class FirebaseDatabaseRepo {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 val sortedList = expenseList.sortedBy { -it.time }
-                val savedList = expenseDao.getExpenses()
+                val savedList = expenseDao.getExpenses().map { it.time }
 
                 var expense : Expense
                 var i = 0
                 while (i < sortedList.size) {
                     expense = sortedList[i]
-                    if (!savedList.contains(expense)) {
+                    if (!savedList.contains(expense.time)) {
                         expense.expenseId = 0
                         expenseDao.insert(expense)
                     }
                     i++
                 }
 
+            }
+        }
+    }
+
+    fun flushDatabase() {
+        GlobalScope.launch {
+            withContext(Dispatchers.Default) {
+                expenseDao.deleteAll()
             }
         }
     }

@@ -23,14 +23,8 @@ class FirebaseDatabaseRepo {
         .getReference("users")
         .child(userId)
     private val expenseDao = ExpenseDatabase.getInstance(ExpenseTrackerApplication.instance).expenseDAO
-
-    fun insert(expense: Expense) {
-        Log.i("insert", expense.toString())
-        val newExpense = expense.copy()
-        database
-            .child(newExpense.time.toString())
-            .setValue(newExpense)
-    }
+    private val expenseDao2 = ExpenseDatabase.getInstance2(ExpenseTrackerApplication.instance).expenseDAO
+    private var connected = false
 
     companion object {
         fun initialize() {
@@ -39,6 +33,17 @@ class FirebaseDatabaseRepo {
         }
         lateinit var instance: FirebaseDatabaseRepo
             private set
+    }
+
+    fun insert(expense: Expense) {
+        val newExpense = expense.copy()
+        if (connected) {
+            database
+                .child(newExpense.time.toString())
+                .setValue(newExpense)
+        } else {
+            secondaryDatabaseInsert(newExpense)
+        }
     }
 
     private fun addListeners() {
@@ -51,6 +56,20 @@ class FirebaseDatabaseRepo {
             override fun onCancelled(error: DatabaseError) {}
         }
         database.addValueEventListener(expenseListListener)
+
+        val connectedRef = FirebaseDatabase
+            .getInstance("https://expense-tracker-52c53-default-rtdb.europe-west1.firebasedatabase.app/")
+            .getReference(".info/connected")
+        connectedRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                connected = snapshot.getValue(Boolean::class.java) ?: false
+                if (connected) {
+                    updateRemoteDatabase()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     private fun updateDatabase(expenseList: List<Expense>?) {
@@ -80,6 +99,32 @@ class FirebaseDatabaseRepo {
         GlobalScope.launch {
             withContext(Dispatchers.Default) {
                 expenseDao.deleteAll()
+                expenseDao2.deleteAll()
+            }
+        }
+    }
+
+    private fun secondaryDatabaseInsert(expense: Expense) {
+        GlobalScope.launch {
+            withContext(Dispatchers.Default) {
+                expense.expenseId = 0
+                expenseDao2.insert(expense)
+            }
+        }
+    }
+
+    private fun updateRemoteDatabase() {
+        GlobalScope.launch {
+            withContext(Dispatchers.Default) {
+                val expenseList = expenseDao2.getExpenses()
+                var newExpense : Expense
+                for (e in expenseList) {
+                    newExpense = e.copy()
+                    database
+                        .child(newExpense.time.toString())
+                        .setValue(newExpense)
+                }
+                expenseDao2.deleteAll()
             }
         }
     }

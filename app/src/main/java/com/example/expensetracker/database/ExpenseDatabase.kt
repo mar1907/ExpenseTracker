@@ -14,6 +14,7 @@ abstract class ExpenseDatabase : RoomDatabase(){
 
         @Volatile
         private var INSTANCE: ExpenseDatabase? = null
+        private var INSTANCE2: ExpenseDatabase? = null
 
         fun getInstance(context: Context): ExpenseDatabase {
             synchronized(this) {
@@ -28,6 +29,24 @@ abstract class ExpenseDatabase : RoomDatabase(){
                         .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
+                }
+                return instance
+            }
+        }
+
+        fun getInstance2(context: Context): ExpenseDatabase {
+            synchronized(this) {
+                var instance = INSTANCE2
+
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        ExpenseDatabase::class.java,
+                        "expense_database2"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
+                    INSTANCE2 = instance
                 }
                 return instance
             }

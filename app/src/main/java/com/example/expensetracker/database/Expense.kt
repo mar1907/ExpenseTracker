@@ -19,7 +19,7 @@ data class Expense (
     var comment: String = "",
 
     @ColumnInfo(name = "time")
-    val time: Long = System.currentTimeMillis(),
+    var time: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "delete_id")
     val deleteId: Long = 0L

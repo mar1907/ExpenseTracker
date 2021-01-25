@@ -52,12 +52,12 @@ class ExpenseDialogViewModel(
     private suspend fun insert(newExpense: Expense) {
 
         if (newExpense.expenseId != 0L) {
-            val delExpense = Expense(deleteId = newExpense.expenseId)
+            val delExpense = Expense(deleteId = newExpense.time)
             val newId = database.insert(delExpense)
             delExpense.expenseId = newId
             firebaseDatabase.insert(delExpense)
             newExpense.expenseId = 0L
-            Log.i("insert", "delete")
+            newExpense.time += 1
         }
         val newId = database.insert(newExpense)
         Log.i("insert", "insert")
